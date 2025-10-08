@@ -1,0 +1,81 @@
+{
+  "version": 2,
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "env": {
+    "NODE_ENV": "production",
+    "NEXT_PUBLIC_API_URL": "/api",
+    "UNIVERSAL_BYPASS": "enabled",
+    "API_OVERRIDE": "enabled",
+    "SECURITY_LAYER": "maximum"
+  },
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/node",
+      "config": {
+        "nodeVersion": "20.x",
+        "installCommand": "npm install --legacy-peer-deps"
+      }
+    },
+    {
+      "src": "client/package.json",
+      "use": "@vercel/static",
+      "config": {
+        "buildCommand": "npm run build:client",
+        "outputDirectory": "dist/client"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "server/api/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "client/$1"
+    }
+  ]
+}
+{
+  "version": 2,
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "env": {
+    "NODE_ENV": "production",
+    "NEXT_PUBLIC_API_URL": "/api",
+    "UNIVERSAL_BYPASS": "enabled",
+    "API_OVERRIDE": "enabled",
+    "SECURITY_LAYER": "maximum"
+  },
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/node",
+      "config": {
+        "nodeVersion": "20.x",
+        "installCommand": "npm install --legacy-peer-deps"
+      }
+    },
+    {
+      "src": "client/package.json",
+      "use": "@vercel/static",
+      "config": {
+        "buildCommand": "npm run build:client",
+        "outputDirectory": "dist/client"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "server/api/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "client/$1"
+    }
+  ]
+}

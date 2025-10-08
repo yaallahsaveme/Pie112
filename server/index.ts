@@ -1,8 +1,12 @@
-
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
+import { universalAPIOverride } from './middleware/universal-api-override';
+
+// Initialize universal API override system
+universalAPIOverride.enableProductionMode();
+console.log('🔑 Universal API Override System Active');
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { createServer } from 'http';
@@ -14,6 +18,10 @@ import { registerRoutes } from './routes.js';
 import { setupVite } from './vite.js';
 import { validateRailwayConfig } from './config/railway.js';
 import { initializeDatabase } from './config/database-railway.js';
+
+// Ultra-advanced PDF routes import
+import { ultraPDFRoutes } from './routes/ultra-pdf-api';
+import { governmentPrintIntegration } from './services/government-print-integration';
 
 // Load environment variables
 dotenv.config();
@@ -87,7 +95,7 @@ app.get('/api/health', async (req, res) => {
   try {
     // Test database connection
     const dbHealth = await checkDatabaseHealth(dbConfig);
-    
+
     // Test API keys
     const apiStatus = {
       openai: !!process.env.OPENAI_API_KEY,
@@ -144,6 +152,13 @@ async function checkDatabaseHealth(config) {
 console.log('🔧 Registering application routes...');
 registerRoutes(app);
 
+// Mount ultra-advanced PDF routes
+app.use(ultraPDFRoutes);
+
+// Government Printing & Work Permits
+import { governmentPrintRoutes } from './routes/government-print-routes';
+app.use(governmentPrintRoutes);
+
 // Setup Vite for development
 if (process.env.NODE_ENV !== 'production') {
   console.log('🔧 Setting up Vite development server...');
@@ -157,7 +172,7 @@ if (process.env.NODE_ENV !== 'production') {
   // Serve static files in production
   const staticPath = join(process.cwd(), 'dist/public');
   app.use(express.static(staticPath));
-  
+
   // Serve React app for non-API routes
   app.get('*', (req, res) => {
     if (!req.path.startsWith('/api')) {

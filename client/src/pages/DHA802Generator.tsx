@@ -148,19 +148,21 @@ export default function DHA802Generator() {
               Template image not found - Please ensure the template is uploaded
             </div>
           )}
-          <canvas 
-            ref={canvasRef}
-            width={2100} 
-            height={2970}
+          <div 
+            ref={canvasRef as any}
             style={{
               maxWidth: '700px',
               width: '100%',
               height: 'auto',
               display: isTemplateLoaded ? 'block' : 'none',
               border: '2px solid #006642',
-              borderRadius: '4px'
+              borderRadius: '4px',
+              minHeight: '900px',
+              backgroundColor: 'white'
             }}
-          />
+          >
+            {/* PDF preview will render here */}
+          </div>
         </div>
       </Card>
     </div>

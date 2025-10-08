@@ -26,7 +26,7 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
-job:
+
   test:
     name: Test Application
     runs-on: ubuntu-latest
@@ -364,3 +364,4 @@ job:
     # Severities lower than this value will be reported in the workflow console but will not cause an error for the action; value should be one of: critical | high | medium | low
     severity: 
           
+    

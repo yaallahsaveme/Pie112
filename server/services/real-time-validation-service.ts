@@ -15,7 +15,7 @@
 
 import { EventEmitter } from 'events';
 import { storage } from '../storage';
-import { productionGovernmentApi } from './production-government-api';
+import { productionGovernmentAPI as productionGovernmentApi } from './production-government-api.js';
 import { dhaWorkflowEngine } from './dha-workflow-engine';
 import { fraudDetectionService } from './fraud-detection';
 

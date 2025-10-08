@@ -26,21 +26,21 @@ const logEnvironmentState = (context: string) => {
 // FAILSAFE: Force development mode detection with extensive logging
 const detectEnvironmentWithLogging = (context: string) => {
   logEnvironmentState(context);
-  
+
   // Failsafe 1: If running on Replit (development environment)
   if (process.env.REPL_ID && !process.env.RAILWAY_ENVIRONMENT) {
     console.log(`🔧 [ENV DEBUG] Detected Replit environment - forcing development mode`);
     process.env.NODE_ENV = 'development';
     return 'development';
   }
-  
+
   // Failsafe 2: If NODE_ENV is not set, default to development
   if (!process.env.NODE_ENV || process.env.NODE_ENV === '') {
     console.log(`🔧 [ENV DEBUG] NODE_ENV not set - forcing development mode`);
     process.env.NODE_ENV = 'development';
     return 'development';
   }
-  
+
   const env = process.env.NODE_ENV;
   console.log(`🔧 [ENV DEBUG] Final environment: ${env}`);
   return env;
@@ -54,7 +54,7 @@ const isProduction = (context?: string) => {
 };
 
 const isDevelopment = (context?: string) => {
-  const env = detectEnvironmentWithLogging(context || 'isDevelopment check'); 
+  const env = detectEnvironmentWithLogging(context || 'isDevelopment check');
   const result = env === 'development' || env === 'test' || env === undefined;
   console.log(`🔍 [ENV DEBUG] isDevelopment() = ${result}`);
   return result;
@@ -135,7 +135,7 @@ class ConfigurationService {
    */
   public validateAndLoad(): Config {
     console.log('🔄 [CONFIG] Starting configuration validation...');
-    
+
     if (this.isValidated) {
       console.log('✅ [CONFIG] Configuration already validated, returning cached config');
       return this.config;
@@ -145,7 +145,7 @@ class ConfigurationService {
       // Log initial environment state
       console.log('🔍 [CONFIG] Environment variables at config load time:');
       logEnvironmentState('validateAndLoad start');
-      
+
       // Parse environment variables
       console.log('📝 [CONFIG] Parsing environment variables...');
       const rawConfig = {
@@ -178,9 +178,9 @@ class ConfigurationService {
       // Check environment BEFORE applying development defaults
       const isDevMode = isDevelopment('development defaults check');
       const isProdMode = isProduction('production check');
-      
+
       console.log(`🔧 [CONFIG] Environment determination: isDevelopment=${isDevMode}, isProduction=${isProdMode}`);
-      
+
       // Apply secure development defaults FIRST if needed and NOT in production
       if (isDevMode && !isProdMode) {
         console.log('🔑 [CONFIG] Generating development secrets...');
@@ -191,7 +191,7 @@ class ConfigurationService {
           QUANTUM_ENCRYPTION_KEY: !!rawConfig.QUANTUM_ENCRYPTION_KEY
         };
         console.log('📊 [CONFIG] Secrets state before generation:', secretsBefore);
-        
+
         rawConfig.SESSION_SECRET = rawConfig.SESSION_SECRET || this.generateSecureDevelopmentSecret('session');
         rawConfig.JWT_SECRET = rawConfig.JWT_SECRET || this.generateSecureDevelopmentSecret('jwt');
         rawConfig.ENCRYPTION_KEY = rawConfig.ENCRYPTION_KEY || this.generateSecureDevelopmentSecret('encryption');
@@ -200,7 +200,7 @@ class ConfigurationService {
         rawConfig.QUANTUM_ENCRYPTION_KEY = rawConfig.QUANTUM_ENCRYPTION_KEY || this.generateSecureDevelopmentSecret('quantum-encryption');
         rawConfig.BIOMETRIC_ENCRYPTION_KEY = rawConfig.BIOMETRIC_ENCRYPTION_KEY || this.generateSecureDevelopmentSecret('encryption');
         rawConfig.DOCUMENT_SIGNING_KEY = rawConfig.DOCUMENT_SIGNING_KEY || this.generateSecureDevelopmentSecret('encryption');
-        
+
         const secretsAfter = {
           SESSION_SECRET: !!rawConfig.SESSION_SECRET,
           JWT_SECRET: !!rawConfig.JWT_SECRET,
@@ -216,7 +216,7 @@ class ConfigurationService {
       console.log('🔒 [CONFIG] Checking if production validation is needed...');
       const needsProductionValidation = isProduction('production validation check');
       console.log(`🔒 [CONFIG] Production validation needed: ${needsProductionValidation}`);
-      
+
       if (needsProductionValidation) {
         console.log('🔒 [CONFIG] Running production secrets validation...');
         this.validateProductionSecrets(rawConfig); // Use the class method that takes rawConfig
@@ -288,7 +288,7 @@ class ConfigurationService {
     }
 
     // Validate generated keys are properly formatted
-    if (rawConfig.JWT_SECRET && rawConfig.JWT_SECRET.length >= 64 && 
+    if (rawConfig.JWT_SECRET && rawConfig.JWT_SECRET.length >= 64 &&
         /^[A-Fa-f0-9]+$/.test(rawConfig.JWT_SECRET)) {
       console.log('[Config] Valid hex JWT secret detected');
     }

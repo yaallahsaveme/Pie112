@@ -24,8 +24,8 @@ import { consentMiddleware } from '../middleware/consent-middleware';
 import { storage } from '../storage';
 import { requireAuth, requireRole } from '../middleware/auth';
 import { asyncHandler } from '../utils/asyncHandler';
-import { aiRateLimit } from '../middleware/rate-limiting';
-import { config } from '../config/production-config';
+import { aiRateLimit } from '../middleware/enhanced-rate-limit.js';
+import { productionConfig as config } from '../config/production.js';
 
 // *** START EDITED CODE ***
 import { Router } from 'express';
